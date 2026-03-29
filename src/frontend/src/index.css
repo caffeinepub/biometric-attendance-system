@@ -1,0 +1,63 @@
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap");
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --radius: 0.5rem;
+
+    /* Light theme — SalaryBox style */
+    --background: 0.975 0.005 255;
+    --foreground: 0.168 0.018 264;
+    --card: 1 0 0;
+    --card-foreground: 0.168 0.018 264;
+    --popover: 1 0 0;
+    --popover-foreground: 0.168 0.018 264;
+    --primary: 0.546 0.245 264;
+    --primary-foreground: 1 0 0;
+    --secondary: 0.965 0.025 240;
+    --secondary-foreground: 0.48 0.235 264;
+    --muted: 0.985 0.003 255;
+    --muted-foreground: 0.51 0.014 255;
+    --accent: 0.965 0.025 240;
+    --accent-foreground: 0.48 0.235 264;
+    --destructive: 0.577 0.245 27.325;
+    --destructive-foreground: 1 0 0;
+    --border: 0.918 0.006 255;
+    --input: 0.918 0.006 255;
+    --ring: 0.546 0.245 264;
+    --chart-1: 0.546 0.245 264;
+    --chart-2: 0.696 0.17 162.48;
+    --chart-3: 0.769 0.188 70.08;
+    --chart-4: 0.627 0.265 303.9;
+    --chart-5: 0.645 0.246 16.439;
+    --sidebar: 1 0 0;
+    --sidebar-foreground: 0.168 0.018 264;
+    --sidebar-primary: 0.546 0.245 264;
+    --sidebar-primary-foreground: 1 0 0;
+    --sidebar-accent: 0.965 0.025 240;
+    --sidebar-accent-foreground: 0.48 0.235 264;
+    --sidebar-border: 0.918 0.006 255;
+    --sidebar-ring: 0.546 0.245 264;
+  }
+
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Plus Jakarta Sans", system-ui, sans-serif;
+  }
+}
