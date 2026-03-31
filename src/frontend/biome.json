@@ -1,6 +1,7 @@
 {
   "$schema": "./node_modules/@biomejs/biome/configuration_schema.json",
   "files": {
+    "maxSize": 2097152,
     "ignore": [
       "**/backend.ts",
       "**/backend.d.ts",
@@ -9,7 +10,8 @@
       "build/**",
       "*.config.js",
       "src/declarations/**",
-      "src/config.ts"
+      "src/config.ts",
+      "src/vendor/**"
     ]
   },
   "formatter": {

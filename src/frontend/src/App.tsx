@@ -21,14 +21,14 @@ function ProtectedRoute({ children }: { children: React.ReactNode }) {
     return (
       <div
         className="flex h-screen items-center justify-center"
-        style={{ background: "#0E1014" }}
+        style={{ background: "#F5F7FA" }}
       >
         <div className="flex flex-col items-center gap-4">
           <div
             className="h-10 w-10 animate-spin rounded-full border-4 border-t-transparent"
-            style={{ borderColor: "#F2C94C", borderTopColor: "transparent" }}
+            style={{ borderColor: "#1D75E8", borderTopColor: "transparent" }}
           />
-          <p className="text-sm" style={{ color: "#A7AFBD" }}>
+          <p className="text-sm" style={{ color: "#6B7280" }}>
             Loading...
           </p>
         </div>

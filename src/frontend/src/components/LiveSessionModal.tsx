@@ -1,7 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import * as faceapi from "@vladmandic/face-api";
 import {
   CheckCircle2,
   Loader2,
@@ -16,6 +15,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { toast } from "sonner";
 import type { AttendanceRecord, FaceData, Student } from "../backend";
 import { useActor } from "../hooks/useActor";
+import * as faceapi from "../vendor/face-api.js";
 
 // ---------------------------------------------------------------------------
 // Types
@@ -217,6 +217,7 @@ export default function LiveSessionModal({
 
   // -------------------------------------------------------------------------
   // Build face matcher from stored faces
+  // Use Tiny Face Detector for consistent model usage
   // -------------------------------------------------------------------------
   const buildFaceMatcher = useCallback(
     async (faces: FaceData[], students: Student[]) => {
@@ -236,7 +237,10 @@ export default function LiveSessionModal({
             const detection = await faceapi
               .detectSingleFace(
                 img,
-                new faceapi.TinyFaceDetectorOptions({ inputSize: 160 }),
+                new faceapi.TinyFaceDetectorOptions({
+                  inputSize: 224,
+                  scoreThreshold: 0.4,
+                }),
               )
               .withFaceLandmarks()
               .withFaceDescriptor();
@@ -253,7 +257,7 @@ export default function LiveSessionModal({
         }
 
         if (labeled.length > 0) {
-          faceMatcherRef.current = new faceapi.FaceMatcher(labeled, 0.55);
+          faceMatcherRef.current = new faceapi.FaceMatcher(labeled, 0.65);
         }
         setFaceMatcherReady(true);
       } catch (err) {
@@ -275,7 +279,6 @@ export default function LiveSessionModal({
   const startDetectionLoop = useCallback(() => {
     if (scanIntervalRef.current) clearInterval(scanIntervalRef.current);
 
-    // Run detection every 600ms for fast punch in/out
     scanIntervalRef.current = setInterval(async () => {
       if (isProcessingRef.current) return;
       const video = videoRef.current;
@@ -288,13 +291,13 @@ export default function LiveSessionModal({
         isProcessingRef.current = true;
         setCurrentScanStatus("scanning");
 
-        // Use inputSize 160 for significantly faster detection
+        // Use Tiny Face Detector — matches the loaded models
         const detection = await faceapi
           .detectSingleFace(
             video,
             new faceapi.TinyFaceDetectorOptions({
-              inputSize: 160,
-              scoreThreshold: 0.35,
+              inputSize: 224,
+              scoreThreshold: 0.4,
             }),
           )
           .withFaceLandmarks()
@@ -317,7 +320,7 @@ export default function LiveSessionModal({
 
         const match = matcher.findBestMatch(detection.descriptor);
 
-        if (match.label === "unknown" || match.distance > 0.55) {
+        if (match.label === "unknown" || match.distance > 0.65) {
           setCurrentScanStatus("no_match");
           isProcessingRef.current = false;
           return;
@@ -383,7 +386,7 @@ export default function LiveSessionModal({
       } finally {
         isProcessingRef.current = false;
       }
-    }, 600);
+    }, 800);
   }, [date]);
 
   // -------------------------------------------------------------------------
@@ -585,7 +588,6 @@ export default function LiveSessionModal({
             className="relative w-full overflow-hidden rounded-2xl"
             style={{
               background: "#0E1014",
-              // Fill remaining vertical space; cap aspect ratio only on small screens
               height: "calc(100% - 56px)",
               minHeight: 280,
               border: `2px solid ${borderColor}`,
@@ -639,7 +641,7 @@ export default function LiveSessionModal({
               </div>
             )}
 
-            {/* Video feed — object-contain so full face is visible on big screens */}
+            {/* Video feed */}
             <video
               ref={videoRef}
               autoPlay
